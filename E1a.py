@@ -26,9 +26,9 @@ distance_matrix={
 'Esbjerg': {'Aarhus': 250,'Copenhagen': 350,'Odense': 200,'Aalborg': 250,'Esbjerg': 0},
 }
 
-tour = ['Aarhus', 'Aarhus']
+tour = ['Copenhagen', 'Copenhagen']
 remaining_cities = set(distance_matrix.keys())
-remaining_cities.remove('Aarhus')
+remaining_cities.remove('Copenhagen')
 
 i = 0
 while remaining_cities:

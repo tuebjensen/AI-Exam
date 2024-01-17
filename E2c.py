@@ -14,10 +14,10 @@ class ShapeDataset(torch.utils.data.Dataset):
     def __init__(self, img_dir):
         self.img_labels = torch.zeros(200, dtype=torch.long)
         self.img_labels[:100] = 0
-        self.img_labels[100:200] = 1
+        self.img_labels[100:] = 1
         #self.img_labels = F.one_hot(self.img_labels.to(torch.int64), 2)
         self.img_dir = img_dir
-        self.transform = transforms.Compose([transforms.Grayscale(), transforms.ConvertImageDtype(torch.float32), transforms.Normalize((0.5,), (0.5,))])
+        self.transform = transforms.Compose([transforms.Grayscale(), transforms.ConvertImageDtype(torch.float32), transforms.Normalize([127], [127])])
     
     def __len__(self):
         return len(self.img_labels)
@@ -32,11 +32,11 @@ class ShapeDataset(torch.utils.data.Dataset):
         image = self.transform(image)
         return image, label
 
-dataset = ShapeDataset("C:/Users/TJ/Documents/Repos/AI-Exam/data/combined")
+dataset = ShapeDataset("C:/Users/Hej/Documents/Repos/AI-Exam/data/combined")
 train_dataset, test_dataset = train_test_split(dataset, train_size=0.8, test_size=0.2)
 
-torch.manual_seed(42)
-batch_size = 8
+# torch.manual_seed(42)
+batch_size = 32
 learning_rate = 0.001
 epochs = 10
 
@@ -46,7 +46,7 @@ test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=Fa
 
 model = nn.Sequential(
     nn.Flatten(),
-    nn.Linear(200 * 200, 128),
+    nn.Linear(200 * 200 * 3, 128),
     nn.ReLU(),
     nn.Linear(128, 2)
 )
@@ -57,11 +57,13 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 # Training loop
 losses = []
 for epoch in range(epochs):
+    running_loss = 0.0
     for images, labels in train_loader:
         optimizer.zero_grad()
         outputs = model(images)
         loss = criterion(outputs, labels)
         loss.backward()
+        running_loss += loss.item() * images.size(0)
         optimizer.step()
     losses.append(loss.item())
     print(f'Epoch {epoch+1}/{epochs}, Loss: {loss.item()}')
