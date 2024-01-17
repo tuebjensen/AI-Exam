@@ -32,7 +32,7 @@ class ShapeDataset(torch.utils.data.Dataset):
         image = self.transform(image)
         return image, label
 
-dataset = ShapeDataset('C:/Users/TJ/Desktop/Programming/Examprep/Exam/data/combined')
+dataset = ShapeDataset("C:/Users/TJ/Documents/Repos/AI-Exam/data/combined")
 train_dataset, test_dataset = train_test_split(dataset, train_size=0.8, test_size=0.2)
 
 torch.manual_seed(42)
