@@ -8,11 +8,14 @@ def find_nearest_node():
                 min_distance = distance_matrix[visited_city][remaining_city]
     return (min_key, min_distance)
 
-def find_lowest_cost_insertion():
+def find_lowest_cost_insertion(min_key):
     min_cost = float('inf')
     min_index = 0
     for i in range(len(tour)-1):
-        cost = distance_matrix[tour[i]][min_key] + distance_matrix[tour[i + 1]][min_key] - distance_matrix[tour[i]][tour[i + 1]]
+        dik = distance_matrix[tour[i]][min_key]
+        djk = distance_matrix[tour[i + 1]][min_key]
+        dij = distance_matrix[tour[i]][tour[i + 1]]
+        cost = dik + djk - dij
         if cost < min_cost:
             min_cost = cost
             min_index = i + 1
@@ -26,15 +29,15 @@ distance_matrix={
 'Esbjerg': {'Aarhus': 250,'Copenhagen': 350,'Odense': 200,'Aalborg': 250,'Esbjerg': 0},
 }
 
-tour = ['Copenhagen', 'Copenhagen']
+tour = ['Aarhus', 'Aarhus']
 remaining_cities = set(distance_matrix.keys())
-remaining_cities.remove('Copenhagen')
+remaining_cities.remove('Aarhus')
 
 i = 0
 while remaining_cities:
     i += 1
     min_key, min_distance = find_nearest_node()
-    min_index, min_cost = find_lowest_cost_insertion()
+    min_index, min_cost = find_lowest_cost_insertion(min_key)
     tour.insert(min_index, min_key)
     remaining_cities.remove(min_key)
     print('Iteration:', i)
